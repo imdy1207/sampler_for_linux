@@ -1,0 +1,44 @@
+barcharts:
+  - title: Local network activity
+    position: [[0, 0], [80, 8]]
+    rate-ms: 500
+    scale: 0
+    items:
+      - label: UDP bytes in
+        sample: netstat -J bytes_in -l 1 -m udp | awk '{sum += $4} END {print sum}'
+      - label: UDP bytes out
+        sample: netstat -J bytes_out -l 1 -m udp | awk '{sum += $4} END {print sum}'
+      - label: TCP bytes in
+        sample: netstat -J bytes_in -l 1 -m tcp | awk '{sum += $4} END {print sum}'
+      - label: TCP bytes out
+        sample: netstat -J bytes_out -l 1 -m tcp | awk '{sum += $4} END {print sum}'
+sparklines:
+  - title: CPU usage
+    position: [[0, 20], [40, 12]]
+    rate-ms: 200
+    scale: 0
+    sample: ps -A -o %cpu | awk '{s+=$1} END {print s}'
+  - title: Free memory pages
+    position: [[40, 20], [40, 12]]
+    rate-ms: 200
+    scale: 0
+    sample: free | grep Mem | awk '{print $4/$2*100}'
+textboxes:
+  - title: Local weather
+    position: [[0, 8], [40, 12]]
+    rate-ms: 10000
+    color: 178
+    sample: curl wttr.in?0ATQF
+    border: false
+  - title: Docker containers stats
+    position: [[40, 8], [40, 12]]
+    rate-ms: 500
+    sample: docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}"
+asciiboxes:
+  - title: UTC time
+    position: [[0, 32], [80, 8]]
+    rate-ms: 500
+    color: 43
+    sample: env TZ=UTC date +%r
+    border: false
+    font: 3d
