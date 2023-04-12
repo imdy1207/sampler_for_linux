@@ -1,6 +1,6 @@
 runcharts:
   - title: Search engine response time
-    position: [[0, 8], [40, 12]]
+    position: [[0, 5], [80, 6]]
     rate-ms: 500
     legend:
         enabled: true
@@ -19,7 +19,7 @@ runcharts:
         sample: curl -o /dev/null -s -w '%{time_total}'  https://www.naver.com
 barcharts:
   - title: Local network activity
-    position: [[40, 8], [40, 12]]
+    position: [[0, 11], [80, 5]]
     rate-ms: 500
     scale: 0
     items:
@@ -35,48 +35,81 @@ barcharts:
       - label: TCP bytes out
         sample: netstat -s udp | grep 'segments sent out' | tail | awk '{sum += $1}
             END {print sum}'
+gauges:
+  - title: YEAR PROGRESS
+    position: [[0, 32], [80, 2]]
+    cur:
+        sample: date +%j
+    max:
+        sample: echo 365
+    min:
+        sample: echo 0
+  - title: DAY PROGRESS
+    position: [[0, 34], [80, 2]]
+    cur:
+        sample: date +%H
+    max:
+        sample: echo 24
+    min:
+        sample: echo 0
+  - title: HOUR PROGRESS
+    position: [[0, 36], [80, 2]]
+    cur:
+        sample: date +%M
+    max:
+        sample: echo 60
+    min:
+        sample: echo 0
+  - title: MINUTE PROGRESS
+    position: [[0, 38], [80, 2]]
+    triggers:
+      - title: CLOCK BELL EVERY MINUTE
+        condition: '[ $label == "cur" ] && [ $cur -eq 0 ] && echo 1 || echo 0'
+        actions:
+            sound: true
+            script: say -v samantha `date +%I:%M%p`
+    cur:
+        sample: date +%S
+    max:
+        sample: echo 60
+    min:
+        sample: echo 0
 sparklines:
   - title: CPU usage
-    position: [[0, 0], [40, 8]]
+    position: [[0, 0], [40, 5]]
     rate-ms: 200
     scale: 0
     sample: ps -A -o %cpu | awk '{s+=$1} END {print s}'
   - title: Free memory pages
-    position: [[40, 0], [40, 8]]
+    position: [[40, 0], [40, 5]]
     rate-ms: 200
     scale: 0
     sample: free | grep Mem | awk '{print $4/$2*100}'
 textboxes:
-  - title: Local weather
-    position: [[40, 20], [40, 12]]
-    rate-ms: 10000
-    color: 178
-    sample: curl wttr.in?0ATQF
-    border: false
   - title: Seoul weather
-    position: [[50, 20], [40, 12]]
+    position: [[0, 16], [30, 7]]
     rate-ms: 10000
     color: 178
     sample: curl wttr.in/seoul?0ATQF
     border: false
   - title: New York weather
-    position: [[60, 20], [40, 12]]
+    position: [[28, 16], [30, 7]]
     rate-ms: 10000
     sample: curl wttr.in/newyork?0ATQF
     border: false
   - title: Tokyo weather
-    position: [[70, 20], [40, 12]]
+    position: [[55, 16], [30, 7]]
     rate-ms: 10000
     sample: curl wttr.in/tokyo?0ATQF
     transform: echo 1
     border: false
   - title: Docker containers stats
-    position: [[0, 32], [40, 8]]
+    position: [[0, 21], [80, 5]]
     rate-ms: 500
     sample: docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}"
 asciiboxes:
   - title: UTC time
-    position: [[0, 20], [40, 12]]
+    position: [[0, 26], [80, 6]]
     rate-ms: 500
     color: 43
     sample: env TZ=UTC date +%r
