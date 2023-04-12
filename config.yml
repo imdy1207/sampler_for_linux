@@ -1,17 +1,22 @@
-barcharts:
-  - title: Local network activity
+runcharts:
+  - title: Search engine response time
     position: [[0, 0], [80, 8]]
     rate-ms: 500
-    scale: 0
+    legend:
+        enabled: true
+        details: false
+    scale: 2
     items:
-      - label: UDP bytes in
-        sample: netstat -J bytes_in -l 1 -m udp | awk '{sum += $4} END {print sum}'
-      - label: UDP bytes out
-        sample: netstat -J bytes_out -l 1 -m udp | awk '{sum += $4} END {print sum}'
-      - label: TCP bytes in
-        sample: netstat -J bytes_in -l 1 -m tcp | awk '{sum += $4} END {print sum}'
-      - label: TCP bytes out
-        sample: netstat -J bytes_out -l 1 -m tcp | awk '{sum += $4} END {print sum}'
+      - label: GOOGLE
+        color: 178
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.google.com
+      - label: SAMSUNG
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.samsung.com/
+      - label: BING
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.bing.com
+      - label: NAVER
+        color: 10
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.naver.com
 sparklines:
   - title: CPU usage
     position: [[0, 20], [40, 12]]
@@ -25,13 +30,13 @@ sparklines:
     sample: free | grep Mem | awk '{print $4/$2*100}'
 textboxes:
   - title: Local weather
-    position: [[0, 8], [40, 12]]
+    position: [[0, 8], [27, 13]]
     rate-ms: 10000
     color: 178
     sample: curl wttr.in?0ATQF
     border: false
   - title: Docker containers stats
-    position: [[40, 8], [40, 12]]
+    position: [[26, 8], [55, 13]]
     rate-ms: 500
     sample: docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}"
 asciiboxes:
